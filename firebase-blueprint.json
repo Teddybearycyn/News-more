@@ -1,0 +1,52 @@
+{
+  "entities": {
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "Represents an SEO-optimized blog post.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "excerpt": { "type": "string" },
+        "content": { "type": "string" },
+        "author": { "type": "string" },
+        "date": { "type": "string" },
+        "category": { "type": "string" },
+        "image": { "type": "string" },
+        "keywords": { "type": "array", "items": { "type": "string" } },
+        "faqs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": { "type": "string" },
+              "answer": { "type": "string" }
+            }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "slug", "excerpt", "content", "author", "date", "category", "image"]
+    },
+    "AppConfig": {
+      "title": "AppConfig",
+      "description": "Configuration settings for the application, including the AI master switch.",
+      "type": "object",
+      "properties": {
+        "aiEnabled": { "type": "boolean" },
+        "lastRun": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "blogs": {
+      "schema": "BlogPost",
+      "description": "Collection of SEO-optimized blog posts."
+    },
+    "config": {
+      "schema": "AppConfig",
+      "description": "System configuration, including AI shutdown switch."
+    }
+  }
+}

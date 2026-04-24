@@ -18,14 +18,6 @@ import Terms from "./pages/Terms.tsx";
 export default function App() {
   return (
     <HelmetProvider>
-      <Helmet>
-        <meta name="google-adsense-account" content="ca-pub-1111265152760334" />
-        <script 
-          async 
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1111265152760334" 
-          crossorigin="anonymous"
-        />
-      </Helmet>
       <Router>
         <ScrollToTop />
         <Layout>

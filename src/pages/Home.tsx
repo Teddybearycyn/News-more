@@ -9,6 +9,7 @@ import SEO from "../components/SEO.tsx";
 export default function Home() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const currentUrl = typeof window !== 'undefined' ? window.location.origin : 'https://newsmore.com';
 
   useEffect(() => {
     getBlogs().then(data => {
@@ -19,27 +20,43 @@ export default function Home() {
 
   const featuredPosts = blogs.slice(0, 8);
 
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "News More",
+    "alternateName": "NewsMore",
+    "url": currentUrl,
+    "logo": `${currentUrl}/logo.png`,
+    "description": "Premium insights for freelancing, IT, customer support, and engineering.",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "info.axelionscale@gmail.com",
+      "contactType": "customer service"
+    }
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "News More",
+    "url": currentUrl,
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": `${currentUrl}/blog?q={search_term_string}`
+      },
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <>
       <SEO 
-        title="Home" 
-        description="News More - Premium insights for freelancing, IT, customer support, and engineering. Scale your career with our expert updates." 
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "News More",
-          "url": "https://newsmore.com",
-          "logo": "https://newsmore.com/logo.png",
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "email": "info.axelionscale@gmail.com",
-            "contactType": "customer service"
-          },
-          "sameAs": [
-            "https://twitter.com/newsmore",
-            "https://linkedin.com/company/newsmore"
-          ]
-        }}
+        title="Scale Your Career Beyond Limits" 
+        description="News More provides premium insights for freelancing, IT, engineering, and digital growth. Join professionals mastering the digital frontier." 
+        keywords={["freelancing", "IT engineering", "career growth", "digital strategy", "News More", "NewsMore"]}
+        schema={[organizationSchema, websiteSchema]}
       />
       
       {/* Hero Section */}

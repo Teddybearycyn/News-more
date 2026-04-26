@@ -22,7 +22,7 @@ export default function SEO({
   canonical
 }: SEOProps) {
   const fullTitle = `${title} | News More`;
-  const canonicalUrl = canonical || url;
+  const canonicalUrl = canonical || (typeof window !== 'undefined' ? window.location.href : url);
 
   return (
     <Helmet>
@@ -31,7 +31,9 @@ export default function SEO({
       <meta name="keywords" content={keywords.join(", ")} />
       <link rel="canonical" href={canonicalUrl} />
       
-      {/* Open Graph / Facebook */}
+      {/* Brand Identification */}
+      <meta name="application-name" content="News More" />
+      <meta name="apple-mobile-web-app-title" content="News More" />
       <meta property="og:type" content={type} />
       <meta property="og:url" content={url} />
       <meta property="og:title" content={fullTitle} />

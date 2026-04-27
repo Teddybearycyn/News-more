@@ -61,7 +61,7 @@ export default function BlogList() {
           "@type": "CollectionPage",
           "name": "The Journal | News More",
           "description": "Explore our library of expert-led articles on freelancing, IT, support operations and technical engineering.",
-          "url": "https://newsmore.com/#/blog"
+          "url": "https://newsmore.com/blog"
         }}
       />
       

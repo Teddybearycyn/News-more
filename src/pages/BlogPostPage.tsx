@@ -115,11 +115,11 @@ export default function BlogPostPage() {
           "author": [{
             "@type": "Person",
             "name": post.author,
-            "url": "https://newsmore.com/#/about"
+            "url": "https://newsmore.com/about"
           }],
           "mainEntityOfPage": {
             "@type": "WebPage",
-            "@id": `https://newsmore.com/#/blog/${post.slug}`
+            "@id": `https://newsmore.com/blog/${post.slug}`
           },
           "publisher": {
             "@type": "Organization",

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import Layout from "./components/Layout.tsx";
 import ScrollToTop from "./components/ScrollToTop.tsx";

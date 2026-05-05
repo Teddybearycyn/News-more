@@ -53,12 +53,22 @@ export default function Terms() {
           </section>
 
           <section className="bg-white/5 p-8 rounded-3xl border border-white/10">
-            <h2 className="text-2xl text-white font-medium mb-4 text-orange-500">4. Professional Disclaimer (E-E-A-T)</h2>
-            <p className="italic">
-              The information provided on News More regarding technical engineering, IT support, and career freelancing is for <strong>educational and informational purposes only</strong>.
+            <h2 className="text-2xl text-white font-medium mb-4 text-orange-500 underline decoration-orange-500/20 underline-offset-8 italic">4. Financial & Market Data Disclaimer</h2>
+            <p className="italic text-orange-100/70 mb-4">
+              News More provides real-time market visualization for educational purposes.
             </p>
             <p className="mt-4">
-              While we strive to provide high-quality and accurate content, News More makes no warranties about the completeness, reliability, and accuracy of this information. Any action you take upon the information you find on this website is strictly at your own risk. News More will not be liable for any losses and/or damages in connection with the use of our website.
+              The information provided on the Market Intelligence dashboard, including but not limited to BTC/USDT and Forex pair pricing, is synthesized from various public data sources. News More is not a financial advisor, broker, or dealer. Any investment decisions made based on information from this site are at your own peril. We strongly recommend consulting with a certified financial professional before making high-stakes trades.
+            </p>
+            <p className="mt-4 text-sm opacity-50">
+              Latency: Our data feeds may experience delays of up to 5 seconds depending on network conditions. Do not use this platform for high-frequency algorithmic trade execution.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl text-white font-medium mb-4 border-b border-white/10 pb-2">5. Professional Content Disclosure (E-E-A-T)</h2>
+            <p>
+              The technical insights regarding engineering, IT support, and career scaling are provided by experts with documented experience. However, software environments change rapidly. You are responsible for verifying all technical instructions in a sandbox environment before applying them to production systems.
             </p>
           </section>
 

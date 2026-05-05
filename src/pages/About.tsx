@@ -74,6 +74,37 @@ export default function About() {
           </div>
         </section>
 
+        {/* Editorial Guidelines */}
+        <section className="max-w-4xl mx-auto py-24 px-6 border-t border-white/5">
+          <h2 className="text-3xl font-display font-medium mb-12 text-center text-orange-500">Editorial Guidelines</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold">Accuracy & Fact-Checking</h3>
+              <p className="text-sm text-white/50 leading-relaxed">
+                At News More, our technical content is authored by practitioners who hold at least 5 years of industry experience in their respective fields. We strictly avoid speculative technical advice and verify all command-line examples and code snippets against stable production environments before publishing.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold">Independence & Ethics</h3>
+              <p className="text-sm text-white/50 leading-relaxed">
+                We maintain absolute editorial independence. Any sponsored content is explicitly labeled. Our primary loyalty is to our readers—not to any software vendor or hardware provider. Our goal is to provide unbiased, objective analysis that you can rely on for career growth.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold">Human-Centric Content</h3>
+              <p className="text-sm text-white/50 leading-relaxed">
+                While we utilize AI for data analysis and research assistance, every single sentence published on News More is curated and edited by human experts. We believe that the nuance of professional freelancing and technical engineering can only be truly captured by those who have lived the experience.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold">Continuous Correction</h3>
+              <p className="text-sm text-white/50 leading-relaxed">
+                The tech world moves fast. We commit to reviewing our "Masterclass" blogs quarterly to ensure that legacy advice is updated to reflect current best practices and security standards. If you find an error, please contact us at info.axelionscale@gmail.com.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Bio */}
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-5xl font-display font-medium mb-8">The Mission.</h2>

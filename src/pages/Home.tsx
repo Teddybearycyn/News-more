@@ -139,6 +139,47 @@ export default function Home() {
             </motion.div>
           ))}
         </div>
+
+        {/* Deep Content Section for AdSense Approval */}
+        <div className="max-w-7xl mx-auto mt-24 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div>
+            <h2 className="text-3xl md:text-5xl font-display font-medium mb-8">The <span className="text-orange-500">News More</span> Advantage.</h2>
+            <div className="space-y-6 text-white/50 leading-relaxed">
+              <p>
+                In an era dominated by superficial AI-generated content, <span className="text-white font-medium">News More</span> stands as a beacon of verified, practitioner-led intelligence. Our mission is to provide more than just news—we provide the architectural blueprints for the digital economy.
+              </p>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <div className="text-orange-500 shrink-0 mt-1 font-bold">01</div>
+                  <p className="text-sm"><span className="text-white font-medium">Technical Rigor:</span> Every engineering guide is tested in production-like environments. We don't just talk about scalability; we show you how to build it using verified DevOps protocols.</p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="text-orange-500 shrink-0 mt-1 font-bold">02</div>
+                  <p className="text-sm"><span className="text-white font-medium">Economic Insight:</span> Our market analysis connects the dots between global fiscal policy and the freelance contract market, giving you a competitive edge in pricing your services.</p>
+                </div>
+                <div className="flex gap-4">
+                  <div className="text-orange-500 shrink-0 mt-1 font-bold">03</div>
+                  <p className="text-sm"><span className="text-white font-medium">Career Elevation:</span> We bridge the gap between "working a job" and "building an asset." Our career strategies are designed for high-net-worth individual growth.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gradient-to-br from-orange-600/10 to-transparent p-1 rounded-[40px] border border-white/5">
+            <div className="bg-zinc-900/50 rounded-[38px] p-10 backdrop-blur-xl">
+              <h3 className="text-xl font-bold mb-6">Why Information Quality Matters in 2026</h3>
+              <p className="text-sm text-white/40 mb-8 leading-relaxed">
+                As the barrier to entry for content creation drops to near-zero, the value of <span className="italic">curated expertise</span> skyrockets. News More prioritizes E-E-A-T (Experience, Expertise, Authoritativeness, and Trustworthiness) in every article. We ensure that our readers spend less time filtering noise and more time executing on high-value strategies.
+              </p>
+              <div className="flex items-center gap-4 p-4 bg-orange-600/10 rounded-2xl border border-orange-500/20">
+                <div className="w-10 h-10 rounded-full bg-orange-600 flex items-center justify-center font-bold text-xs italic">NM</div>
+                <div>
+                  <div className="text-xs font-bold uppercase tracking-widest text-orange-500">Editor's Note</div>
+                  <div className="text-[10px] text-white/60">"Quality is the only sustainable strategy."</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Featured Posts */}

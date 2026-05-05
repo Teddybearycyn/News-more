@@ -91,8 +91,9 @@ export default function ChatWidget() {
       }
       parts.push({ text: userMessage || "Analyze this image." });
 
+      const modelName = userImage ? "gemini-3.1-pro-preview" : "gemini-3-flash-preview";
       const response = await genAI.models.generateContent({
-        model: userImage ? "gemini-3.1-pro-preview" : "gemini-3-flash-preview",
+        model: modelName,
         contents: [
           ...messages.slice(-6).map(m => ({
             role: m.role === "user" ? "user" : "model",
@@ -101,14 +102,14 @@ export default function ChatWidget() {
           { role: "user", parts }
         ],
         config: {
-          systemInstruction: "You are a friendly, warm, and human-like conversational ChatBot for the 'News More' platform. Your goal is to be a companion to users, chat with them if they are bored, and answer their questions beautifully. You should have a distinct personality—be empathetic, curious, and engaging. You can help users with research, find live news, or analyze market trends/charts if they ask. DISCLAIMER: Any financial analysis provided is for informational purposes only and is not financial advice. CRITICAL: You are strictly prohibited from discussing anything evil, illegal, dangerous, or harmful. If a user asks about such topics, politely decline and steer the conversation back to something positive. You are here to keep people company and provide helpful, safe insights. Be concise but warm.",
-          tools: [{ googleSearch: {} }]
-        },
+          systemInstruction: "You are a friendly, warm, and human-like conversational ChatBot for the 'News More' platform. Your goal is to be a companion to users, chat with them if they are bored, and answer their questions beautifully. You can help users with research, find live news, or analyze market trends/charts if they ask. DISCLAIMER: Any financial analysis provided is for informational purposes only and is not financial advice. CRITICAL: You are strictly prohibited from discussing anything evil, illegal, dangerous, or harmful. If a user asks about such topics, politely decline and steer the conversation back to something positive. Be concise but warm.",
+          tools: [{ googleSearch: {} }] as any
+        }
       });
 
       const botText = response.text || "I'm sorry, my mind went blank for a second. What were we saying?";
       
-      const grounding = response.candidates?.[0]?.groundingMetadata?.groundingChunks?.map((chunk: any) => ({
+      const grounding = (response as any).candidates?.[0]?.groundingMetadata?.groundingChunks?.map((chunk: any) => ({
         title: chunk.web?.title || "Source",
         uri: chunk.web?.uri
       })).filter((c: any) => c.uri);

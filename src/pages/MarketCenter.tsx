@@ -284,7 +284,7 @@ export default function MarketCenter() {
         </div>
 
         {/* Bottom Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             {["MARKET CAP", "24H VOLUME", "SUPPLY"].map((label, i) => (
                 <div key={label} className="bg-zinc-900/20 border border-white/5 p-6 rounded-2xl flex items-center justify-between">
                     <div>
@@ -297,6 +297,61 @@ export default function MarketCenter() {
                 </div>
             ))}
         </div>
+
+        {/* New Educational/Content Section for AdSense Value */}
+        <motion.section 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          className="bg-zinc-900/10 border-t border-white/5 pt-20 pb-10"
+        >
+          <div className="max-w-4xl">
+            <h2 className="text-3xl font-display font-medium mb-10">Understanding the <span className="text-orange-500">Modern Market Pulse</span></h2>
+            
+            <div className="space-y-12 text-zinc-400 leading-relaxed">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="space-y-4">
+                  <h3 className="text-white font-bold flex items-center gap-2">
+                    <div className="w-1 h-1 bg-orange-500 rounded-full" />
+                    Forex Volatility Analysis
+                  </h3>
+                  <p className="text-sm">
+                    Major pairs like EUR/USD and NZD/USD represent the backbone of global trade. In the current 2026 economic landscape, central bank policies regarding digital currencies and automated liquidity pools have introduced new patterns of volatility. Our 1-minute tracking helps engineers and traders identify these micro-trends before they hit the broader market.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <h3 className="text-white font-bold flex items-center gap-2">
+                    <div className="w-1 h-1 bg-orange-500 rounded-full" />
+                    Crypto-Fiat Displacement
+                  </h3>
+                  <p className="text-sm">
+                    Bitcoin (BTC) has evolved from a speculative asset into a "Digital Gold" standard. The interaction between BTC/USDT and traditional Forex pairs often signals shifts in risk appetite. When Forex markets tighten, we frequently observe a corresponding influx of capital into decentralized liquidity tiers, visible through our real-time spread analysis.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-8 rounded-[32px] bg-white/5 border border-white/10">
+                <h3 className="text-white font-bold mb-4">How to Read High-Frequency Data</h3>
+                <p className="text-sm mb-6">
+                  High-frequency data (HFT) is often misinterpreted by casual observers. While the immediate price action looks chaotic, the "Volume Clusters" and "Spread Equilibrium" reveal the true intent of institutional liquidators. News More provides these metrics to Bridge the gap between retail tools and professional engineering infrastructure. 
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                  {["Relative Strength", "Oscillation", "Mean Reversion", "Liquid Staking"].map(tag => (
+                    <div key={tag} className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 border border-white/5 px-4 py-2 rounded-lg text-center">
+                      {tag}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="prose prose-invert prose-orange max-w-none">
+                <h3 className="text-white font-bold">The News More Commitment to Accuracy</h3>
+                <p className="text-sm">
+                  Our market data is synthesized from multiple high-tier liquidity providers across the globe. By using a weighted average protocol, we ensure that the prices shown on our "Market Intelligence" dashboard are a true reflection of global value, stripped of local anomalies or exchange-specific slippage. This transparency is key to our mission of educating the modern freelancer and technical engineer on global economic shifts.
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.section>
       </div>
     </div>
   );

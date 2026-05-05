@@ -245,10 +245,9 @@ async function startServer() {
     
     if (fs.existsSync(sitemapPath)) {
       res.header("Content-Type", "application/xml");
-      res.sendFile(sitemapPath);
-    } else {
-      res.status(404).send("Sitemap not found");
+      return res.sendFile(sitemapPath);
     }
+    res.status(404).send("Sitemap not found");
   });
 
   app.get("/robots.txt", (req, res) => {
@@ -258,10 +257,21 @@ async function startServer() {
 
     if (fs.existsSync(robotsPath)) {
       res.header("Content-Type", "text/plain");
-      res.sendFile(robotsPath);
-    } else {
-      res.status(404).send("Robots.txt not found");
+      return res.sendFile(robotsPath);
     }
+    res.status(404).send("Robots.txt not found");
+  });
+
+  app.get("/ads.txt", (req, res) => {
+    const adsPath = process.env.NODE_ENV === "production"
+      ? path.join(__dirname, "dist", "ads.txt")
+      : path.join(__dirname, "public", "ads.txt");
+
+    if (fs.existsSync(adsPath)) {
+      res.header("Content-Type", "text/plain");
+      return res.sendFile(adsPath);
+    }
+    res.status(404).send("ads.txt not found");
   });
 
   // Vite middleware for development

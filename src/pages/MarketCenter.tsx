@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -11,7 +11,13 @@ import {
   Globe,
   Clock,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  Info,
+  ChevronRight,
+  ShieldCheck,
+  Rocket,
+  Coins,
+  DollarSign
 } from "lucide-react";
 import { 
   XAxis, 
@@ -24,36 +30,113 @@ import {
 } from "recharts";
 import { format } from "date-fns";
 import { cn } from "../lib/utils.ts";
+import SEO from "../components/SEO.tsx";
+import Counter from "../components/Counter.tsx";
 
 interface PriceData {
   time: string;
   price: number;
 }
 
-const SYMBOLS = ["BTC/USDT", "NZD/USD", "EUR/USD"];
+const SYMBOLS = ["BTC/USDT", "ETH/USDT", "NZD/USD", "EUR/USD", "GBP/USD", "PEPE/USDT", "DOGE/USDT"];
+
+function ShinyLogo({ icon: Icon, color }: { icon: any, color: string }) {
+  return (
+    <div className="relative group">
+      <motion.div 
+        animate={{ 
+          filter: ["brightness(1)", "brightness(1.3)", "brightness(1)"],
+        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        className={cn("w-12 h-12 rounded-2xl flex items-center justify-center border border-white/10 relative z-10 bg-zinc-900/50", color)}
+      >
+        <Icon size={24} />
+      </motion.div>
+      <div className={cn("absolute inset-0 blur-xl opacity-20 group-hover:opacity-40 transition-opacity", color.replace("text-", "bg-"))} />
+    </div>
+  );
+}
+
+function MarketMiniTicker({ symbol, initialPrice, volatility }: { symbol: string, initialPrice: number, volatility: number }) {
+  const [price, setPrice] = useState(initialPrice);
+  const [prevPrice, setPrevPrice] = useState(initialPrice);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPrevPrice(price);
+      const change = price * (Math.random() - 0.48) * volatility; // Slight up bias
+      setPrice(p => p + change);
+    }, 2000 + Math.random() * 1000);
+    return () => clearInterval(interval);
+  }, [price, volatility]);
+
+  const isUp = price >= prevPrice;
+
+  return (
+    <div className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+      <span className="text-[10px] font-mono font-bold text-zinc-500">{symbol}</span>
+      <div className="flex items-center gap-2">
+        <motion.span 
+          key={price}
+          initial={{ opacity: 0.7 }}
+          animate={{ opacity: 1 }}
+          className={cn("text-xs font-mono font-bold", isUp ? "text-green-500" : "text-red-500")}
+        >
+          {price.toFixed(symbol.includes("USDT") && !symbol.includes("PEPE") ? 2 : 6)}
+        </motion.span>
+        {isUp ? <TrendingUp size={10} className="text-green-500" /> : <TrendingDown size={10} className="text-red-500" />}
+      </div>
+    </div>
+  );
+}
 
 export default function MarketCenter() {
-  const [selectedSymbol, setSelectedSymbol] = useState("NZD/USD");
+  const [selectedSymbol, setSelectedSymbol] = useState("BTC/USDT");
+  const [timeframe, setTimeframe] = useState("1H");
   const [currentPrice, setCurrentPrice] = useState<number>(0);
   const [priceHistory, setPriceHistory] = useState<PriceData[]>([]);
-  const [lastTick, setLastTick] = useState<number>(Date.now());
   const [isLoading, setIsLoading] = useState(true);
 
-  // Initial History Fetch
+  // Custom Chart Tooltip
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-zinc-900/90 border border-white/10 backdrop-blur-xl p-4 rounded-2xl shadow-2xl">
+          <div className="text-[10px] text-zinc-500 font-bold uppercase mb-1 tracking-widest">
+            {payload[0].payload.fullDate || payload[0].payload.time}
+          </div>
+          <div className="text-xl font-mono font-bold text-white flex items-center gap-2">
+            <span className="text-orange-500">$</span>
+            {payload[0].value.toLocaleString(undefined, { 
+              minimumFractionDigits: 2, 
+              maximumFractionDigits: (selectedSymbol.includes("PEPE") || selectedSymbol.includes("DOGE")) ? 6 : 4 
+            })}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Initial History Fetch or Simulation
   useEffect(() => {
     setIsLoading(true);
-    fetch(`/api/trading/history?symbol=${selectedSymbol}`)
+    // Simulate resolution based on timeframe
+    const limit = timeframe === "1H" ? 50 : timeframe === "4H" ? 100 : 200;
+    
+    fetch(`/api/trading/history?symbol=${selectedSymbol}&limit=${limit}`)
       .then(res => res.json())
       .then(data => {
         const formatted = data.map((d: any) => ({
           time: format(new Date(d.time), 'HH:mm'),
+          fullDate: format(new Date(d.time), 'MMM dd, HH:mm:ss'),
           price: d.price
         }));
         setPriceHistory(formatted);
         setCurrentPrice(formatted[formatted.length - 1].price);
         setIsLoading(false);
       });
-  }, [selectedSymbol]);
+  }, [selectedSymbol, timeframe]);
 
   // Live Ticker
   useEffect(() => {
@@ -63,16 +146,19 @@ export default function MarketCenter() {
         .then(data => {
           const newPrice = parseFloat(data.price);
           setCurrentPrice(newPrice);
-          setLastTick(Date.now());
           setPriceHistory(prev => {
-            const newList = [...prev, { time: format(new Date(), 'HH:mm:ss'), price: newPrice }];
-            return newList.slice(-50); // Keep last 50 data points for 1m feel
+            const newList = [...prev, { 
+              time: format(new Date(), 'HH:mm:ss'), 
+              fullDate: format(new Date(), 'MMM dd, HH:mm:ss'),
+              price: newPrice 
+            }];
+            return newList.slice(timeframe === "1H" ? -50 : timeframe === "4H" ? -100 : -200);
           });
         });
-    }, 2000); // Update every 2 seconds
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [selectedSymbol]);
+  }, [selectedSymbol, timeframe]);
 
   const priceDiff = priceHistory.length > 1 
     ? currentPrice - priceHistory[0].price 
@@ -81,277 +167,260 @@ export default function MarketCenter() {
     ? (priceDiff / priceHistory[0].price) * 100 
     : 0;
 
+  // Global Macro Stats State
+  const [macroStats, setMacroStats] = useState([
+    { l: "Global Hashrate", t: 680.2, s: " EH/s", d: "+2.4%", dec: 1, base: 680.2 },
+    { l: "Total Locked (TVL)", t: 124, p: "$", s: "B", d: "-0.5%", dec: 0, base: 124 },
+    { l: "Fear & Greed", t: 68, s: " / Greed", d: "NEUTRAL", dec: 0, base: 68 },
+    { l: "Active Wallets", t: 2.4, s: "M", d: "+12%", dec: 1, base: 2.4 }
+  ]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMacroStats(prev => prev.map(stat => {
+        const fluctuation = (Math.random() - 0.5) * (stat.base * 0.005); // 0.5% fluctuation
+        return { ...stat, t: stat.t + fluctuation };
+      }));
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen pt-32 pb-20 bg-[#050505] text-white font-sans selection:bg-orange-500/30">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+    <div className="h-[calc(100vh-5rem)] flex flex-col bg-[#050505] text-white font-sans selection:bg-orange-500/30 overflow-hidden">
+      <SEO 
+        title="Live Market Intelligence Hub" 
+        description="Real-time 2026 market data, professional forex analysis, crypto insights, and meme coin education. Master the markets with News More Expert." 
+        canonical="/market"
+      />
+      
+      {/* Scrollable Dashboard Container */}
+      <div className="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar relative">
+        {/* Scanning Line & Layout Grid - Homepage feel */}
+        <div className="absolute inset-x-0 top-0 h-full pointer-events-none z-0 overflow-hidden">
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-          >
-            <div className="flex items-center gap-3 text-orange-500 text-xs font-bold uppercase tracking-widest mb-2">
-              <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-              Live Market Feed
-            </div>
-            <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-2 italic">
-              Market <span className="text-zinc-500 underline decoration-orange-500/30 underline-offset-8">Intelligence</span>
-            </h1>
-            <p className="text-zinc-500 text-sm max-w-md">
-              High-frequency data streaming for major forex pairs and crypto. 1-minute interval analysis powered by News More AI.
-            </p>
-          </motion.div>
-
-          <div className="flex bg-zinc-900/50 p-1 rounded-2xl border border-white/5 backdrop-blur-xl">
-            {SYMBOLS.map(symbol => (
-              <button
-                key={symbol}
-                onClick={() => setSelectedSymbol(symbol)}
-                className={cn(
-                  "px-6 py-3 rounded-xl transition-all font-mono text-sm",
-                  selectedSymbol === symbol 
-                    ? "bg-orange-600 text-white shadow-lg shadow-orange-600/20" 
-                    : "text-zinc-400 hover:text-white hover:bg-white/5"
-                )}
-              >
-                {symbol}
-              </button>
-            ))}
-          </div>
+            animate={{ 
+              y: ["0%", "100%", "0%"],
+              opacity: [0, 0.3, 0]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            className="w-full h-px bg-gradient-to-r from-transparent via-orange-500/10 to-transparent shadow-[0_0_20px_rgba(249,115,22,0.1)]"
+          />
         </div>
 
-        {/* Pulse Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
-          {/* Main Chart Card */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="lg:col-span-3 bg-zinc-900/30 border border-white/5 p-8 rounded-[32px] backdrop-blur-sm relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-8 opacity-5">
-              <Globe size={200} />
-            </div>
-
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
-              <div className="flex items-center gap-6">
-                <div className="w-16 h-16 bg-zinc-800/50 rounded-2xl flex items-center justify-center border border-white/5">
-                  <BarChart3 className="text-orange-500" size={32} />
-                </div>
-                <div>
-                  <div className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-1">Current Price</div>
-                  <div className="text-5xl font-mono tracking-tighter flex items-baseline gap-2">
-                    ${currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 5 })}
-                    <span className={cn(
-                      "text-sm font-bold flex items-center",
-                      priceDiff >= 0 ? "text-green-500" : "text-red-500"
-                    )}>
-                      {priceDiff >= 0 ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
-                      {Math.abs(pricePercent).toFixed(3)}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <div className="bg-white/5 px-4 py-2 rounded-xl border border-white/5 text-center">
-                  <div className="text-[10px] text-zinc-500 uppercase font-bold mb-1">Timeframe</div>
-                  <div className="text-xs font-mono text-orange-500 flex items-center gap-1 justify-center">
-                    <Clock size={12} /> 1M
-                  </div>
-                </div>
-                <div className="bg-white/5 px-4 py-2 rounded-xl border border-white/5 text-center">
-                  <div className="text-[10px] text-zinc-500 uppercase font-bold mb-1">Latency</div>
-                  <div className="text-xs font-mono text-green-500">2ms</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="h-[450px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={priceHistory}>
-                  <defs>
-                    <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#f97316" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} opacity={0.3} />
-                  <XAxis 
-                    dataKey="time" 
-                    stroke="#3f3f46" 
-                    fontSize={11} 
-                    tickLine={false} 
-                    axisLine={false}
-                    minTickGap={30}
-                  />
-                  <YAxis 
-                    domain={['auto', 'auto']} 
-                    stroke="#3f3f46" 
-                    fontSize={11} 
-                    tickLine={false} 
-                    axisLine={false}
-                    tickFormatter={(val) => `$${val.toFixed(2)}`}
-                    orientation="right"
-                  />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#09090b', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', backdropFilter: 'blur(10px)' }}
-                    itemStyle={{ color: '#f97316' }}
-                    labelStyle={{ color: '#71717a', fontSize: '10px', textTransform: 'uppercase' }}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="price" 
-                    stroke="#f97316" 
-                    fillOpacity={1} 
-                    fill="url(#colorPrice)" 
-                    strokeWidth={3}
-                    animationDuration={300}
-                    baseLine={0}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div className="mt-8 flex items-center justify-between text-[10px] uppercase font-bold tracking-[0.2em] text-zinc-600">
-              <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                Connection: Secure-TLS
-              </div>
-              <div>Server Time: {new Date().toLocaleTimeString()}</div>
-              <div className="flex items-center gap-2">
-                <RefreshCw size={10} className="animate-spin" />
-                Auto-refresh Enabled
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Side Panels */}
-          <div className="space-y-8 flex flex-col">
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-zinc-900/50 border border-white/5 p-6 rounded-[32px] flex-1"
-            >
-              <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-500 mb-6 flex items-center gap-2">
-                <Zap size={14} className="text-orange-500" /> AI Quick Insight
-              </h3>
-              
-              <div className="space-y-6">
-                <div className="p-4 bg-orange-600/10 border border-orange-500/20 rounded-2xl">
-                  <div className="text-[10px] text-orange-500 font-bold mb-2 uppercase">Status</div>
-                  <p className="text-xs text-orange-100 leading-relaxed italic">
-                    "Market showing signs of distribution. Crossover on 1M SMA detected. Volatility remains within expected bands for {selectedSymbol}."
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex justify-between text-xs font-mono">
-                    <span className="text-zinc-500">RSI (14)</span>
-                    <span className="text-orange-400">54.2</span>
-                  </div>
-                  <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-orange-600 h-full w-[54%]" />
-                  </div>
-                </div>
-
-                <button className="w-full py-4 bg-white text-black rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-zinc-200 transition-all text-sm">
-                  ASK CHATBOT ANALYSIS
-                </button>
-              </div>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-orange-600 p-8 rounded-[32px] text-white overflow-hidden relative group cursor-pointer"
-            >
-              <div className="relative z-10">
-                <div className="p-3 bg-white/20 rounded-2xl w-fit mb-6">
-                  <Target size={24} />
-                </div>
-                <h4 className="text-2xl font-display font-bold leading-tight mb-3">Copy-Trading Masters</h4>
-                <p className="text-orange-100 text-xs mb-8 leading-relaxed">Join 500+ traders following the News More HFT algorithms automatically.</p>
-                <div className="flex items-center justify-between">
-                  <div className="text-sm font-bold">JOIN NOW</div>
-                  <ArrowUpRight size={20} />
-                </div>
-              </div>
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700" />
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Bottom Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-            {["MARKET CAP", "24H VOLUME", "SUPPLY"].map((label, i) => (
-                <div key={label} className="bg-zinc-900/20 border border-white/5 p-6 rounded-2xl flex items-center justify-between">
-                    <div>
-                        <div className="text-[10px] text-zinc-500 font-bold uppercase mb-1">{label}</div>
-                        <div className="text-xl font-mono tracking-tight underline italic decoration-white/10">
-                            {i === 0 ? "$2.4T" : i === 1 ? "$120B" : "19.8M"}
-                        </div>
-                    </div>
-                    <Activity size={20} className="text-zinc-800" />
-                </div>
-            ))}
-        </div>
-
-        {/* New Educational/Content Section for AdSense Value */}
-        <motion.section 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="bg-zinc-900/10 border-t border-white/5 pt-20 pb-10"
-        >
-          <div className="max-w-4xl">
-            <h2 className="text-3xl font-display font-medium mb-10">Understanding the <span className="text-orange-500">Modern Market Pulse</span></h2>
+        <div className="max-w-7xl mx-auto px-6 py-12 relative z-10">
+          {/* Top Header - Glassmorphism */}
+          <div className="relative mb-12">
+            <div className="absolute -top-12 -left-12 w-64 h-64 bg-orange-600/5 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute -top-12 -right-12 w-64 h-64 bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
             
-            <div className="space-y-12 text-zinc-400 leading-relaxed">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div className="space-y-4">
-                  <h3 className="text-white font-bold flex items-center gap-2">
-                    <div className="w-1 h-1 bg-orange-500 rounded-full" />
-                    Forex Volatility Analysis
-                  </h3>
-                  <p className="text-sm">
-                    Major pairs like EUR/USD and NZD/USD represent the backbone of global trade. In the current 2026 economic landscape, central bank policies regarding digital currencies and automated liquidity pools have introduced new patterns of volatility. Our 1-minute tracking helps engineers and traders identify these micro-trends before they hit the broader market.
-                  </p>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="text-white font-bold flex items-center gap-2">
-                    <div className="w-1 h-1 bg-orange-500 rounded-full" />
-                    Crypto-Fiat Displacement
-                  </h3>
-                  <p className="text-sm">
-                    Bitcoin (BTC) has evolved from a speculative asset into a "Digital Gold" standard. The interaction between BTC/USDT and traditional Forex pairs often signals shifts in risk appetite. When Forex markets tighten, we frequently observe a corresponding influx of capital into decentralized liquidity tiers, visible through our real-time spread analysis.
-                  </p>
-                </div>
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+              <div className="max-w-2xl">
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-3 text-orange-500 text-[9px] font-black uppercase tracking-[0.3em] mb-3"
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+                  </span>
+                  Pro-Tier Intelligence Feed
+                </motion.div>
+                <h1 className="text-4xl md:text-6xl font-display font-bold tracking-tight mb-4 bg-gradient-to-br from-white via-white to-white/40 bg-clip-text text-transparent">
+                  Market <span className="italic font-light">Center.</span>
+                </h1>
+                <p className="text-zinc-500 text-base leading-relaxed max-w-xl">
+                  Aggregated institutional data streams for the next generation of digital asset engineers. Analysis and real-time execution.
+                </p>
               </div>
 
-              <div className="p-8 rounded-[32px] bg-white/5 border border-white/10">
-                <h3 className="text-white font-bold mb-4">How to Read High-Frequency Data</h3>
-                <p className="text-sm mb-6">
-                  High-frequency data (HFT) is often misinterpreted by casual observers. While the immediate price action looks chaotic, the "Volume Clusters" and "Spread Equilibrium" reveal the true intent of institutional liquidators. News More provides these metrics to Bridge the gap between retail tools and professional engineering infrastructure. 
-                </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {["Relative Strength", "Oscillation", "Mean Reversion", "Liquid Staking"].map(tag => (
-                    <div key={tag} className="text-[10px] uppercase font-bold tracking-widest text-zinc-500 border border-white/5 px-4 py-2 rounded-lg text-center">
-                      {tag}
+              <div className="flex flex-wrap gap-1.5 bg-zinc-900/40 p-1.5 rounded-2xl border border-white/5 backdrop-blur-3xl">
+                {SYMBOLS.map(symbol => (
+                  <button
+                    key={symbol}
+                    onClick={() => setSelectedSymbol(symbol)}
+                    className={cn(
+                      "px-4 py-2 rounded-xl transition-all font-mono text-[10px] font-bold tracking-tight",
+                      selectedSymbol === symbol 
+                        ? "bg-orange-600 text-white shadow-[0_0_20px_rgba(234,88,12,0.3)]" 
+                        : "text-zinc-500 hover:text-white hover:bg-white/5"
+                    )}
+                  >
+                    {symbol}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Live Terminal Section - Now strictly within container */}
+          <section className="mb-12">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="w-full bg-zinc-900/30 border border-white/5 rounded-[40px] p-6 lg:p-10 backdrop-blur-xl relative overflow-hidden ring-1 ring-white/5"
+            >
+              <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-8 relative z-10">
+                <div className="flex items-center gap-6">
+                  <ShinyLogo icon={BarChart3} color="text-orange-500" />
+                  <div>
+                    <div className="text-[9px] text-zinc-500 font-black uppercase tracking-[0.2em] mb-1">Live Price Source</div>
+                    <div className="text-4xl font-mono tracking-tighter flex items-center gap-4">
+                      ${currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: (selectedSymbol.includes("PEPE") || selectedSymbol.includes("DOGE")) ? 6 : 4 })}
+                      <div className={cn(
+                        "px-2 py-0.5 rounded-full text-[9px] font-black border flex items-center gap-1",
+                        priceDiff >= 0 ? "bg-green-500/10 text-green-500 border-green-500/20" : "bg-red-500/10 text-red-500 border-red-500/20"
+                      )}>
+                        {priceDiff >= 0 ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
+                        {Math.abs(pricePercent).toFixed(3)}%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 overflow-x-auto pb-4 md:pb-0 flex-nowrap custom-scrollbar max-w-full">
+                  <div className="flex bg-white/5 p-1 rounded-xl border border-white/5 mr-2 shrink-0">
+                    {["1H", "4H", "1D"].map(tf => (
+                      <button
+                        key={tf}
+                        onClick={() => setTimeframe(tf)}
+                        className={cn(
+                          "px-3 py-1 rounded-lg text-[9px] font-black transition-all whitespace-nowrap",
+                          timeframe === tf ? "bg-orange-600 text-white shadow-lg" : "text-zinc-500 hover:text-zinc-300"
+                        )}
+                      >
+                        {tf}
+                      </button>
+                    ))}
+                  </div>
+                  {[
+                    { label: "Stability", value: "99.9%", color: "text-emerald-500" },
+                    { label: "Period", value: timeframe, color: "text-orange-500" },
+                    { label: "Status", value: "OPEN", color: "text-green-500" }
+                  ].map(item => (
+                    <div key={item.label} className="bg-white/5 border border-white/5 px-4 py-2 rounded-xl text-center min-w-[80px] shrink-0">
+                      <div className="text-[8px] text-zinc-500 font-bold uppercase mb-0.5">{item.label}</div>
+                      <div className={cn("text-[10px] font-mono font-bold", item.color)}>{item.value}</div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="prose prose-invert prose-orange max-w-none">
-                <h3 className="text-white font-bold">The News More Commitment to Accuracy</h3>
-                <p className="text-sm">
-                  Our market data is synthesized from multiple high-tier liquidity providers across the globe. By using a weighted average protocol, we ensure that the prices shown on our "Market Intelligence" dashboard are a true reflection of global value, stripped of local anomalies or exchange-specific slippage. This transparency is key to our mission of educating the modern freelancer and technical engineer on global economic shifts.
-                </p>
+              <div className="h-[450px] w-full relative z-10">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={priceHistory}>
+                    <defs>
+                      <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#f97316" stopOpacity={0.4}/>
+                        <stop offset="100%" stopColor="#f97316" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} opacity={0.1} />
+                    <XAxis dataKey="time" hide />
+                    <YAxis domain={['auto', 'auto']} hide />
+                    <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#f97316', strokeWidth: 1, strokeDasharray: '4 4' }} />
+                    <Area 
+                      type="monotone" 
+                      dataKey="price" 
+                      stroke="#f97316" 
+                      strokeWidth={3} 
+                      fill="url(#chartGradient)"
+                      animationDuration={300}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
-            </div>
+
+              <div className="mt-6 flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-white/5 relative z-10">
+                <div className="flex items-center gap-4 text-[9px] font-bold text-zinc-600">
+                  <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" /> SYSTEM: STABLE</span>
+                  <span className="flex items-center gap-1.5"><RefreshCw size={10} className="animate-spin text-orange-500" /> GLOBAL SYNC: ACTIVE</span>
+                </div>
+                <div className="text-[9px] font-mono text-zinc-500 uppercase">Latency: 12ms</div>
+              </div>
+            </motion.div>
+          </section>
+
+          {/* Quick Watchlist Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+            <MarketMiniTicker symbol="PEPE/USDT" initialPrice={0.00000845} volatility={0.005} />
+            <MarketMiniTicker symbol="DOGE/USDT" initialPrice={0.1542} volatility={0.002} />
+            <MarketMiniTicker symbol="ETH/USDT" initialPrice={2642.12} volatility={0.0008} />
+            <MarketMiniTicker symbol="GBP/USD" initialPrice={1.2742} volatility={0.0002} />
           </div>
-        </motion.section>
+
+          <motion.div 
+            className="w-full bg-gradient-to-r from-blue-600 via-indigo-700 to-blue-600 p-8 rounded-[40px] text-white relative overflow-hidden group mb-16 border border-white/10 shadow-[0_0_80px_rgba(37,99,235,0.15)]"
+          >
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md shrink-0">
+                  <ShieldCheck size={28} />
+                </div>
+                <div>
+                  <h4 className="text-2xl font-bold mb-1">Alpha Signals v2.4</h4>
+                  <p className="text-indigo-100/70 text-xs max-w-md">Proprietary institutional-grade AI filters detecting volatility patterns before they hit the retail desk. Access the same data as the whales.</p>
+                </div>
+              </div>
+              <button className="bg-white text-blue-700 px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-zinc-100 transition-all shrink-0 active:scale-95">
+                Unlock Deep Access
+              </button>
+            </div>
+            <div className="absolute top-0 right-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.05] pointer-events-none" />
+          </motion.div>
+
+          {/* Small Academy Section */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            {[
+              { icon: DollarSign, title: "Forex Hub", color: "text-emerald-500", glowColor: "rgba(16, 185, 129, 0.5)", desc: "Global currency dynamics." },
+              { icon: Coins, title: "Crypto", color: "text-orange-500", glowColor: "rgba(249, 115, 22, 0.5)", desc: "Digital asset primitives." },
+              { icon: Rocket, title: "Meme Lab", color: "text-purple-500", glowColor: "rgba(168, 85, 247, 0.5)", desc: "Sentiment-driven trading." }
+            ].map((item, idx) => (
+              <div key={item.title} className="p-6 bg-zinc-900/40 border border-white/5 rounded-[32px] hover:border-white/20 transition-all group overflow-hidden relative">
+                <motion.div
+                  animate={{ 
+                    y: [0, -8, 0],
+                    boxShadow: [
+                      `0 0 0px ${item.glowColor.replace('0.5', '0')}`,
+                      `0 0 25px ${item.glowColor}`,
+                      `0 0 0px ${item.glowColor.replace('0.5', '0')}`
+                    ]
+                  }}
+                  transition={{ 
+                    y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: idx * 0.5 },
+                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut", delay: idx * 0.5 }
+                  }}
+                  className={cn("w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 mb-4 group-hover:scale-110 transition-transform duration-500 relative overflow-hidden", item.color)}
+                >
+                  <item.icon size={20} className="relative z-10" />
+                  
+                  {/* Shining Light Sweep Effect */}
+                  <motion.div
+                    animate={{ x: ['-150%', '150%'] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 + idx, ease: "linear" }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12 pointer-events-none"
+                  />
+                </motion.div>
+                <h5 className="font-bold mb-2 group-hover:text-white/100 text-white/90">{item.title}</h5>
+                <p className="text-zinc-500 text-xs">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Macro Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-12 border-t border-white/5">
+            {macroStats.map((stat, i) => (
+              <div key={stat.l} className="group">
+                <div className="text-[9px] font-black text-zinc-600 uppercase tracking-widest mb-1 group-hover:text-orange-500 transition-colors">{stat.l}</div>
+                <div className="text-xl font-mono font-bold">
+                  <Counter target={stat.t} prefix={stat.p} suffix={stat.s} decimals={stat.dec} />
+                </div>
+                <div className="text-[9px] font-bold text-orange-500 mt-0.5">{stat.d}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

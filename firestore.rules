@@ -6,14 +6,33 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // Blogs: Publicly readable
-    match /blogs/{blogId} {
-      allow read: if true;
-      allow write: if false; 
+    // Global Helpers
+    function isSignedIn() {
+      return request.auth != null;
     }
 
-    // Config: Publicly readable
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Blogs: Publicly readable, admin only can write
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow write: if false; // Only server (Admin SDK) should write here normally
+    }
+
+    // Config: Publicly readable, admin only can write
     match /config/{docId} {
+      allow read: if true;
+      allow write: if false; // Only server (Admin SDK) should write here normally
+    }
+
+    // Health check collection
+    match /health/{docId} {
       allow read: if true;
       allow write: if false;
     }

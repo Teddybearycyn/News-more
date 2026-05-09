@@ -2,7 +2,44 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../lib/firebase.ts";
 import { MasterAIService } from "../services/masterAIService.ts";
-import { collection, query, where, getDocs, setDoc, doc, Timestamp, orderBy, limit } from "firebase/firestore";
+import { collection, query, where, getDocs, setDoc, doc, Timestamp, limit } from "firebase/firestore";
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 /**
  * MasterAIController: The "Invisible" Brain
@@ -47,7 +84,13 @@ export default function MasterAIController() {
         limit(1)
       );
       
-      const snapshot = await getDocs(q);
+      let snapshot;
+      try {
+        snapshot = await getDocs(q);
+      } catch (error) {
+        handleFirestoreError(error, OperationType.GET, "blogs");
+        return; // handleFirestoreError throws, but just in case
+      }
       
       if (snapshot.empty) {
         // No blog today! Master AI takes action.
@@ -75,13 +118,17 @@ export default function MasterAIController() {
       
       if (blogData.slug) {
         // 3. Save to Firestore
-        await setDoc(doc(db, "blogs", blogData.slug), {
-          ...blogData,
-          createdAt: Timestamp.now(),
-          updatedAt: Timestamp.now(),
-          status: "published",
-          views: 0
-        });
+        try {
+          await setDoc(doc(db, "blogs", blogData.slug), {
+            ...blogData,
+            createdAt: Timestamp.now(),
+            updatedAt: Timestamp.now(),
+            status: "published",
+            views: 0
+          });
+        } catch (error) {
+          handleFirestoreError(error, OperationType.WRITE, `blogs/${blogData.slug}`);
+        }
         
         console.log(`Master AI: Successfully research and posted: ${blogData.title}`);
       }

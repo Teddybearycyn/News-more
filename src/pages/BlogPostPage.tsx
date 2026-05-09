@@ -103,40 +103,39 @@ export default function BlogPostPage() {
         title={post.title} 
         description={post.excerpt} 
         keywords={post.keywords}
-        image={post.image}
-        type="article"
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "Article",
-          "headline": post.title,
-          "image": [post.image],
-          "datePublished": new Date(post.date).toISOString(),
-          "dateModified": new Date(post.date).toISOString(),
-          "author": [{
-            "@type": "Person",
-            "name": post.author,
-            "url": "https://newsmore.com/about"
-          }],
-          "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": `https://newsmore.com/blog/${post.slug}`
+        ogImage={post.image}
+        ogType="article"
+        author={post.author}
+        date={new Date(post.date).toISOString()}
+        canonical={`/blog/${post.slug}`}
+        structuredData={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": post.title,
+            "image": [post.image],
+            "datePublished": new Date(post.date).toISOString(),
+            "dateModified": new Date(post.date).toISOString(),
+            "author": [{
+              "@type": "Person",
+              "name": post.author,
+              "url": "https://newsmore.expert/about"
+            }],
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": `https://newsmore.expert/blog/${post.slug}`
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "News More Expert",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://newsmore.expert/logo.png"
+              }
+            },
+            "description": post.excerpt
           },
-          "publisher": {
-            "@type": "Organization",
-            "name": "News More",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://newsmore.com/logo.png"
-            }
-          },
-          "description": post.excerpt
-        }}
-      />
-      {post.faqs && post.faqs.length > 0 && (
-        <SEO 
-          title={post.title}
-          description={post.excerpt}
-          schema={{
+          ...(post.faqs && post.faqs.length > 0 ? [{
             "@context": "https://schema.org",
             "@type": "FAQPage",
             "mainEntity": post.faqs.map(faq => ({
@@ -147,9 +146,9 @@ export default function BlogPostPage() {
                 "text": faq.answer
               }
             }))
-          }}
-        />
-      )}
+          }] : [])
+        ]}
+      />
       
       <div className="max-w-4xl mx-auto px-6 py-20">
         <Link to="/blog" className="inline-flex items-center gap-2 text-white/40 hover:text-orange-500 transition-colors mb-12 font-medium">

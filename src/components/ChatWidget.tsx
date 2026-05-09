@@ -124,27 +124,27 @@ export default function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-8 right-28 z-50">
+    <div className="fixed bottom-6 right-6 z-50">
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute bottom-20 right-0 w-[350px] md:w-[400px] h-[500px] bg-[#0A0A0A] border border-white/10 rounded-[32px] shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl"
+            className="absolute bottom-16 right-0 w-[280px] md:w-[320px] h-[400px] bg-[#0A0A0A] border border-white/10 rounded-[24px] shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl"
           >
             {/* Header */}
-            <div className={cn("p-6 flex items-center justify-between transition-colors", isBotEnabled ? "bg-orange-600" : "bg-zinc-800")}>
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-xl">
-                  {isBotEnabled ? <Bot size={20} className="text-white" /> : <PowerOff size={20} className="text-white" />}
+            <div className={cn("p-4 flex items-center justify-between transition-colors", isBotEnabled ? "bg-orange-600" : "bg-zinc-800")}>
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 bg-white/20 rounded-lg">
+                  {isBotEnabled ? <Bot size={16} className="text-white" /> : <PowerOff size={16} className="text-white" />}
                 </div>
                 <div>
-                  <h3 className="text-white font-bold text-sm">Friendly AI</h3>
-                  <p className="text-white/70 text-[10px] uppercase tracking-widest font-bold">{isBotEnabled ? "Here to Chat" : "Resting..."}</p>
+                  <h3 className="text-white font-bold text-xs">Friendly AI</h3>
+                  <p className="text-white/70 text-[8px] uppercase tracking-widest font-bold">{isBotEnabled ? "Here to Chat" : "Resting..."}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 {isAdmin ? (
                   <button 
                     onClick={async () => {
@@ -156,63 +156,63 @@ export default function ChatWidget() {
                         body: JSON.stringify({ enabled: next })
                       });
                     }}
-                    className="p-2 hover:bg-black/10 rounded-lg transition-colors text-white/60 hover:text-white"
+                    className="p-1.5 hover:bg-black/10 rounded-lg transition-colors text-white/60 hover:text-white"
                     title={isBotEnabled ? "Hibernate ChatBot" : "Wake Up ChatBot"}
                   >
-                    {isBotEnabled ? <Power size={18} /> : <Power size={18} className="text-orange-500" />}
+                    {isBotEnabled ? <Power size={14} /> : <Power size={14} className="text-orange-500" />}
                   </button>
                 ) : (
                   <button 
                     onDoubleClick={handleAdminLogin}
-                    className="p-2 text-white/5 opacity-0 hover:opacity-10 transition-opacity"
+                    className="p-1.5 text-white/5 opacity-0 hover:opacity-10 transition-opacity"
                     title="Admin restricted"
                   >
-                    <ShieldCheck size={18} />
+                    <ShieldCheck size={14} />
                   </button>
                 )}
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="p-2 hover:bg-black/10 rounded-lg transition-colors text-white/60 hover:text-white"
+                  className="p-1.5 hover:bg-black/10 rounded-lg transition-colors text-white/60 hover:text-white"
                 >
-                  <X size={20} />
+                  <X size={16} />
                 </button>
               </div>
             </div>
 
             {/* Messages */}
             {!isBotEnabled ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-12 text-center">
-                <PowerOff size={48} className="text-white/10 mb-6" />
-                <h4 className="text-white font-bold mb-2">ChatBot is Offline</h4>
-                <p className="text-white/40 text-sm">Your companion is currently resting. Feel free to browse our blogs in the meantime!</p>
+              <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
+                <PowerOff size={32} className="text-white/10 mb-4" />
+                <h4 className="text-white font-bold text-sm mb-1">ChatBot is Offline</h4>
+                <p className="text-white/40 text-xs leading-relaxed">Your companion is currently resting. Feel free to browse our blogs!</p>
               </div>
             ) : (
               <div 
                 ref={scrollRef}
-                className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-white/10"
+                className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-white/10"
               >
                 {messages.map((m, i) => (
                   <div 
                     key={i}
                     className={cn(
-                      "flex flex-col max-w-[80%]",
+                      "flex flex-col max-w-[85%]",
                       m.role === "user" ? "ml-auto items-end" : "mr-auto items-start"
                     )}
                   >
                     <div className={cn(
-                      "px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap",
+                      "px-3 py-2 text-xs leading-relaxed whitespace-pre-wrap",
                       m.role === "user" 
-                        ? "bg-orange-600 text-white rounded-br-none" 
-                        : "bg-white/5 text-white/80 border border-white/10 rounded-bl-none"
+                        ? "bg-orange-600 text-white rounded-2xl rounded-br-none" 
+                        : "bg-white/5 text-white/80 border border-white/10 rounded-2xl rounded-bl-none"
                     )}>
                       {m.image && (
-                        <img src={m.image} alt="User upload" className="w-full max-w-[200px] rounded-lg mb-2 border border-white/10" />
+                        <img src={m.image} alt="User upload" className="w-full max-w-[150px] rounded-lg mb-2 border border-white/10" />
                       )}
                       {m.text}
                       {m.grounding && m.grounding.length > 0 && (
-                        <div className="mt-3 pt-3 border-t border-white/10 flex flex-col gap-2">
-                          <div className="text-[10px] uppercase tracking-wider text-white/30 flex items-center gap-1">
-                            <Search size={10} /> Sources
+                        <div className="mt-2 pt-2 border-t border-white/10 flex flex-col gap-1.5">
+                          <div className="text-[9px] uppercase tracking-wider text-white/30 flex items-center gap-1">
+                            <Search size={8} /> Sources
                           </div>
                           {m.grounding.map((g, gi) => (
                             <a 
@@ -220,9 +220,9 @@ export default function ChatWidget() {
                               href={g.uri} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="text-[11px] text-orange-400 hover:underline flex items-center gap-1 group"
+                              className="text-[10px] text-orange-400 hover:underline flex items-center gap-1 group"
                             >
-                              {g.title} <X size={10} className="rotate-45 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              {g.title} <X size={8} className="rotate-45 opacity-0 group-hover:opacity-100 transition-opacity" />
                             </a>
                           ))}
                         </div>
@@ -231,28 +231,28 @@ export default function ChatWidget() {
                   </div>
                 ))}
                 {isLoading && (
-                  <div className="flex items-center gap-2 text-white/30 text-xs font-medium animate-pulse">
-                    <Loader2 size={14} className="animate-spin" /> Thinking...
+                  <div className="flex items-center gap-2 text-white/30 text-[10px] font-medium animate-pulse pl-1">
+                    <Loader2 size={12} className="animate-spin" /> Thinking...
                   </div>
                 )}
               </div>
             )}
 
             {/* Input */}
-            <form onSubmit={handleSubmit} className="p-6 pt-0">
+            <form onSubmit={handleSubmit} className="p-4 pt-0">
               {selectedImage && (
-                <div className="mb-3 relative inline-block">
-                  <img src={selectedImage} alt="Preview" className="h-16 w-16 object-cover rounded-xl border border-orange-500/50" />
+                <div className="mb-2 relative inline-block">
+                  <img src={selectedImage} alt="Preview" className="h-12 w-12 object-cover rounded-lg border border-orange-500/50" />
                   <button 
                     type="button"
                     onClick={() => setSelectedImage(null)}
-                    className="absolute -top-2 -right-2 bg-black text-white rounded-full p-1 border border-white/10 hover:bg-zinc-800"
+                    className="absolute -top-1.5 -right-1.5 bg-black text-white rounded-full p-1 border border-white/10 hover:bg-zinc-800"
                   >
-                    <X size={12} />
+                    <X size={10} />
                   </button>
                 </div>
               )}
-              <div className="relative flex items-center gap-2">
+              <div className="relative flex items-center gap-1.5">
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -264,25 +264,25 @@ export default function ChatWidget() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={!isBotEnabled}
-                  className="p-3 bg-white/5 border border-white/10 rounded-2xl text-white/50 hover:text-white hover:bg-white/10 transition-all"
+                  className="p-2.5 bg-white/5 border border-white/10 rounded-xl text-white/50 hover:text-white hover:bg-white/10 transition-all"
                 >
-                  <ImageIcon size={20} />
+                  <ImageIcon size={16} />
                 </button>
                 <div className="relative flex-1">
                   <input
                     type="text"
                     disabled={!isBotEnabled}
-                    placeholder={isBotEnabled ? "Say something..." : "Chat is offline"}
+                    placeholder={isBotEnabled ? "Message..." : "Offline"}
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl pl-6 pr-14 py-4 text-sm focus:outline-none focus:border-orange-500 transition-colors disabled:opacity-50"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-10 py-2.5 text-xs focus:outline-none focus:border-orange-500 transition-colors disabled:opacity-50"
                   />
                   <button 
                     type="submit"
                     disabled={(!inputText.trim() && !selectedImage) || isLoading || !isBotEnabled}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-orange-600 text-white rounded-xl hover:bg-orange-700 disabled:opacity-50 disabled:hover:bg-orange-600 transition-all"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:hover:bg-orange-600 transition-all"
                   >
-                    <Send size={18} />
+                    <Send size={14} />
                   </button>
                 </div>
               </div>
@@ -294,11 +294,11 @@ export default function ChatWidget() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "p-5 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 group",
+          "p-3.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 group",
           isOpen ? "bg-white text-black" : "bg-orange-600 text-white"
         )}
       >
-        {isOpen ? <X size={28} /> : <MessageSquare size={28} className="group-hover:rotate-12 transition-transform" />}
+        {isOpen ? <X size={20} /> : <MessageSquare size={20} className="group-hover:rotate-12 transition-transform" />}
       </button>
     </div>
   );

@@ -6,8 +6,10 @@ export default function About() {
   return (
     <>
       <SEO 
-        title="About News More" 
-        description="Learn more about News More and the expertise behind our professional insights." 
+        title="About Our Expertise" 
+        description="Learn more about News More Expert and the practitioners behind our professional insights on freelancing, IT, and engineering." 
+        canonical="/about"
+        keywords={["about News More", "editorial guidelines", "E-E-A-T", "tech expertise", "freelance consulting"]}
       />
       
       <div className="max-w-7xl mx-auto px-6 py-20">
@@ -17,7 +19,7 @@ export default function About() {
               Expertise <br /> Driven by <br /><span className="text-orange-500 italic">Experience.</span>
             </h1>
             <p className="text-xl text-white/50 leading-relaxed mb-8 max-w-lg">
-              News More was founded on the principle that technical engineering and creative freelancing aren't mutual exclusive—they are the two pillars of the modern economy.
+              News More was founded on the principle that technical engineering and creative freelancing aren't mutually exclusive—they are the two pillars of the modern economy.
             </p>
             <div className="flex items-center gap-4 text-orange-500">
               <Shield className="w-12 h-12" />

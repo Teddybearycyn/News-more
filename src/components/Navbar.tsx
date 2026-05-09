@@ -5,11 +5,12 @@ import { useState } from "react";
 import { cn } from "../lib/utils.ts";
 
 const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Markets", path: "/market" },
-  { name: "Blog", path: "/blog" },
-  { name: "About", path: "/about" },
-  { name: "Contact", path: "/contact" },
+  { name: "News", path: "/blog?category=News" },
+  { name: "Politics", path: "/blog?category=Politics" },
+  { name: "Crypto", path: "/blog?category=Crypto" },
+  { name: "Freelance", path: "/blog?category=Freelancing" },
+  { name: "Web3", path: "/blog?category=Web3" },
+  { name: "Sports", path: "/blog?category=Sports" },
 ];
 
 export default function Navbar() {
@@ -20,9 +21,16 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050505]/80 backdrop-blur-md border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform">
-            <span className="font-bold text-xl">N</span>
-          </div>
+          <motion.div 
+            animate={{ 
+              filter: ["brightness(1)", "brightness(1.5)", "brightness(1)"],
+              scale: [1, 1.05, 1] 
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            className="w-10 h-10 bg-orange-600 rounded-xl flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform"
+          >
+            <span className="font-bold text-xl text-white">N</span>
+          </motion.div>
           <span className="font-display font-medium text-2xl tracking-tight hidden sm:block">
             News<span className="text-orange-500">More</span>
           </span>

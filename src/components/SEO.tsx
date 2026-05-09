@@ -1,56 +1,76 @@
-import { Helmet } from "react-helmet-async";
+import { Helmet } from 'react-helmet-async';
 
 interface SEOProps {
-  title: string;
-  description: string;
-  keywords?: string[];
-  image?: string;
-  url?: string;
-  type?: string;
-  schema?: object;
+  title?: string;
+  description?: string;
   canonical?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  keywords?: string[];
+  structuredData?: object;
+  author?: string;
+  date?: string;
 }
 
-export default function SEO({ 
-  title, 
-  description, 
-  keywords = [], 
-  image = "/og-image.png", 
-  url = "https://newsmore.com", 
-  type = "website",
-  schema,
-  canonical
+export default function SEO({
+  title,
+  description,
+  canonical,
+  ogTitle,
+  ogDescription,
+  ogImage,
+  ogType = 'website',
+  keywords,
+  structuredData,
+  author,
+  date,
 }: SEOProps) {
-  const fullTitle = `${title} | News More`;
-  const canonicalUrl = canonical || (typeof window !== 'undefined' ? window.location.href : url);
+  const siteName = 'News More Expert';
+  const fullTitle = title ? `${title} | ${siteName}` : siteName;
+  const defaultDescription = 'Your ultimate resource for freelancing, IT support, technical engineering, and geopolitical insights. Stay informed with expert analysis.';
+  const metaDescription = description || defaultDescription;
+  const url = canonical ? `https://newsmore.expert${canonical}` : 'https://newsmore.expert';
+  const defaultImage = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80';
+  const metaImage = ogImage || defaultImage;
 
   return (
     <Helmet>
+      {/* Basic Meta Tags */}
       <title>{fullTitle}</title>
-      <meta name="description" content={description} />
-      <meta name="keywords" content={keywords.join(", ")} />
-      <link rel="canonical" href={canonicalUrl} />
-      
-      {/* Brand Identification */}
-      <meta name="application-name" content="News More" />
-      <meta name="apple-mobile-web-app-title" content="News More" />
-      <meta property="og:type" content={type} />
+      <meta name="description" content={metaDescription} />
+      {keywords && keywords.length > 0 && (
+        <meta name="keywords" content={keywords.join(', ')} />
+      )}
+      <link rel="canonical" href={url} />
+
+      {/* Open Graph / Facebook */}
+      <meta property="og:type" content={ogType} />
       <meta property="og:url" content={url} />
-      <meta property="og:title" content={fullTitle} />
-      <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:title" content={ogTitle || fullTitle} />
+      <meta property="og:description" content={ogDescription || metaDescription} />
+      <meta property="og:image" content={metaImage} />
+      <meta property="og:site_name" content={siteName} />
 
       {/* Twitter */}
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content={url} />
-      <meta property="twitter:title" content={fullTitle} />
-      <meta property="twitter:description" content={description} />
-      <meta property="twitter:image" content={image} />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={ogTitle || fullTitle} />
+      <meta name="twitter:description" content={ogDescription || metaDescription} />
+      <meta name="twitter:image" content={metaImage} />
 
-      {/* Structured Data */}
-      {schema && (
+      {/* Article Specific Meta Tags */}
+      {ogType === 'article' && author && (
+        <meta property="article:author" content={author} />
+      )}
+      {ogType === 'article' && date && (
+        <meta property="article:published_time" content={date} />
+      )}
+
+      {/* Structured Data (JSON-LD) */}
+      {structuredData && (
         <script type="application/ld+json">
-          {JSON.stringify(schema)}
+          {JSON.stringify(structuredData)}
         </script>
       )}
     </Helmet>

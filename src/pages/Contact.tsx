@@ -15,8 +15,10 @@ export default function Contact() {
   return (
     <>
       <SEO 
-        title="Contact Us" 
-        description="Get in touch with News More for consultancy, collaborations, or general inquiries." 
+        title="Contact Our Experts" 
+        description="Get in touch with News More Expert for technical consultancy, professional collaborations, or general inquiries. We are here to help you scale." 
+        canonical="/contact"
+        keywords={["contact News More", "tech consultancy", "freelance help", "professional collaboration"]}
       />
       
       <div className="max-w-7xl mx-auto px-6 py-20">

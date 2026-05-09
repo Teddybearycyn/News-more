@@ -1,17 +1,20 @@
 import { motion, AnimatePresence } from "motion/react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Search, Filter, ArrowRight, X, Calendar, User, Loader2 } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import SEO from "../components/SEO.tsx";
 import { getBlogs } from "../services/blogService.ts";
 import { BlogPost } from "../data/blogs.ts";
 
-const categories = ["All", "Freelancing", "IT Support", "Customer Support", "Virtual Assistant", "Engineering", "Productivity"];
+const categories = ["All", "News", "Politics", "Crypto", "Freelancing", "Web3", "Sports"];
 
 export default function BlogList() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get("category");
+
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState(categoryParam || "All");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAuthor, setSelectedAuthor] = useState("All");
   const [startDate, setStartDate] = useState("");
@@ -24,6 +27,24 @@ export default function BlogList() {
       setLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    if (categoryParam) {
+      setSelectedCategory(categoryParam);
+    } else {
+      setSelectedCategory("All");
+    }
+  }, [categoryParam]);
+
+  const handleCategoryChange = (cat: string) => {
+    setSelectedCategory(cat);
+    if (cat === "All") {
+      searchParams.delete("category");
+    } else {
+      searchParams.set("category", cat);
+    }
+    setSearchParams(searchParams);
+  };
 
   const authors = useMemo(() => {
     const uniqueAuthors = Array.from(new Set(blogs.map(p => p.author)));
@@ -54,14 +75,15 @@ export default function BlogList() {
   return (
     <>
       <SEO 
-        title="Articles" 
-        description="Explore our library of expert-led articles on freelancing, IT, support operations and technical engineering." 
-        schema={{
+        title="Expert Articles & Insights" 
+        description="Explore our library of expert-led articles on freelancing, IT, support operations, technical engineering, and geopolitical analysis." 
+        canonical="/blog"
+        structuredData={{
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          "name": "The Journal | News More",
+          "name": "The Journal | News More Expert",
           "description": "Explore our library of expert-led articles on freelancing, IT, support operations and technical engineering.",
-          "url": "https://newsmore.com/blog"
+          "url": "https://newsmore.expert/blog"
         }}
       />
       
@@ -87,7 +109,7 @@ export default function BlogList() {
               {categories.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => handleCategoryChange(cat)}
                   className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
                     selectedCategory === cat 
                       ? "bg-orange-600 text-white" 

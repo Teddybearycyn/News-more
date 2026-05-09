@@ -6,23 +6,49 @@ import {
   doc, 
   orderBy, 
   limit, 
-  where,
-  Timestamp,
-  setDoc
+  where
 } from "firebase/firestore";
-import { db } from "../lib/firebase.ts";
+import { db, auth } from "../lib/firebase.ts";
 import { BlogPost, BLOG_POSTS } from "../data/blogs.ts";
 
 const BLOGS_COLLECTION = "blogs";
 
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
+
 export async function getBlogs(): Promise<BlogPost[]> {
   try {
     const blogsQuery = query(collection(db, BLOGS_COLLECTION), orderBy("createdAt", "desc"));
-    const snapshot = await getDocs(blogsQuery);
+    let snapshot;
+    try {
+      snapshot = await getDocs(blogsQuery);
+    } catch (e) {
+      handleFirestoreError(e, OperationType.GET, BLOGS_COLLECTION);
+      return BLOG_POSTS;
+    }
     
     if (snapshot.empty) {
-      // If Firestore is empty, we return static data as a fallback
-      // The server is responsible for seeding the database
       return BLOG_POSTS;
     }
     
@@ -32,15 +58,20 @@ export async function getBlogs(): Promise<BlogPost[]> {
     } as BlogPost));
   } catch (error) {
     console.error("Error fetching blogs:", error);
-    return BLOG_POSTS; // Fallback to static data
+    return BLOG_POSTS;
   }
 }
 
 export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
   try {
-    // 1. Try to fetch directly by ID (since new logic uses slug as ID)
     const docRef = doc(db, BLOGS_COLLECTION, slug);
-    const docSnap = await getDoc(docRef);
+    let docSnap;
+    try {
+      docSnap = await getDoc(docRef);
+    } catch (e) {
+      handleFirestoreError(e, OperationType.GET, `${BLOGS_COLLECTION}/${slug}`);
+      return BLOG_POSTS.find(p => p.slug === slug) || null;
+    }
     
     if (docSnap.exists()) {
       return {
@@ -49,7 +80,6 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
       } as BlogPost;
     }
 
-    // 2. Fallback: Search by slug field (for older entries)
     const q = query(collection(db, BLOGS_COLLECTION), where("slug", "==", slug), limit(1));
     const snapshot = await getDocs(q);
     
@@ -60,7 +90,6 @@ export async function getBlogBySlug(slug: string): Promise<BlogPost | null> {
       } as BlogPost;
     }
     
-    // 3. Last fallback: static data
     return BLOG_POSTS.find(p => p.slug === slug) || null;
   } catch (error) {
     console.error("Error fetching blog by slug:", error);

@@ -2,67 +2,69 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- General Pages -->
   <url>
-    <loc>https://newsmore.com/</loc>
-    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+    <loc>https://newsmore.expert/</loc>
+    <lastmod>2026-05-09T00:00:00+00:00</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://newsmore.com/blog</loc>
-    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+    <loc>https://newsmore.expert/blog</loc>
+    <lastmod>2026-05-09T00:00:00+00:00</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://newsmore.com/about</loc>
-    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+    <loc>https://newsmore.expert/about</loc>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://newsmore.com/market</loc>
-    <lastmod>2026-05-01T00:00:00+00:00</lastmod>
+    <loc>https://newsmore.expert/market</loc>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://newsmore.com/privacy</loc>
+    <loc>https://newsmore.expert/contact</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://newsmore.expert/privacy</loc>
     <lastmod>2026-05-01T00:00:00+00:00</lastmod>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://newsmore.com/terms</loc>
+    <loc>https://newsmore.expert/terms</loc>
     <lastmod>2026-05-01T00:00:00+00:00</lastmod>
     <priority>0.3</priority>
   </url>
 
   <!-- Blog Posts -->
-  <url><loc>https://newsmore.com/blog/ultimate-freelancing-guide-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/it-support-masterclass-network-troubleshooting</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/ai-empathy-customer-support-growth</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/top-tier-virtual-assistant-skills-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/scalable-cloud-architecture-engineering-guide</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/remote-work-productivity-rituals-performance</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/future-it-engineering-ai-career-transition</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/freelance-contract-mastery-rights-earnings</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/customer-support-operations-building-teams</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/advanced-virtual-assistance-premium-rates</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/cloud-migration-strategy-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/devops-excellence-cicd-pipeline-automation</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/cybersecurity-proactive-defense-ai-threats</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/remote-team-leadership-distributed-engineering</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/data-engineering-realtime-analytics</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/freelance-seo-masterclass-ranking-guide</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/engineering-ai-agents-autonomous-workforce</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/enterprise-network-security-hardening</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/scalable-postgres-optimization-guide</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/productivity-systems-engineering-workflow</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/kubernetes-networking-cni-deep-dive</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/frontend-performance-core-web-vitals-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/systems-engineering-rust-safety-performance</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/zero-trust-security-remote-teams-guide</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/llms-customer-support-scaling-quality</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/advanced-typescript-patterns-enterprise</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/sre-error-budgets-innovation-reliability</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/freelance-client-retention-strategic-partnerships</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/scalable-design-systems-bridge-design-code</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/mobile-app-security-handheld-frontier-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/strategic-technical-debt-ship-fast-refactor</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
-  <url><loc>https://newsmore.com/blog/decentralized-identity-did-future-data</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/ultimate-freelancing-guide-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/it-support-masterclass-network-troubleshooting</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/ai-empathy-customer-support-growth</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/top-tier-virtual-assistant-skills-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/scalable-cloud-architecture-engineering-guide</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/remote-work-productivity-rituals-performance</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/future-it-engineering-ai-career-transition</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/freelance-contract-mastery-rights-earnings</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/customer-support-operations-building-teams</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/advanced-virtual-assistance-premium-rates</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/cloud-migration-strategy-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/devops-excellence-cicd-pipeline-automation</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/cybersecurity-proactive-defense-ai-threats</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/remote-team-leadership-distributed-engineering</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/data-engineering-realtime-analytics</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/freelance-seo-masterclass-ranking-guide</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/engineering-ai-agents-autonomous-workforce</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/enterprise-network-security-hardening</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/scalable-postgres-optimization-guide</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/productivity-systems-engineering-workflow</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/kubernetes-networking-cni-deep-dive</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/frontend-performance-core-web-vitals-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/systems-engineering-rust-safety-performance</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/zero-trust-security-remote-teams-guide</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/llms-customer-support-scaling-quality</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/advanced-typescript-patterns-enterprise</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/sre-error-budgets-innovation-reliability</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/freelance-client-retention-strategic-partnerships</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/scalable-design-systems-bridge-design-code</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/mobile-app-security-handheld-frontier-2026</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/strategic-technical-debt-ship-fast-refactor</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
+  <url><loc>https://newsmore.expert/blog/decentralized-identity-did-future-data</loc><lastmod>2026-05-01T00:00:00+00:00</lastmod></url>
 </urlset>

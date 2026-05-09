@@ -21,12 +21,11 @@ import fs from "fs";
 const firebaseConfig = JSON.parse(fs.readFileSync(path.join(__dirname, "firebase-applet-config.json"), "utf8"));
 
 const firebaseApp = admin.apps.length === 0 
-  ? admin.initializeApp({
-      projectId: firebaseConfig.projectId,
-    })
+  ? admin.initializeApp() 
   : admin.app();
 
-const firestore = getFirestore(firebaseApp, firebaseConfig.firestoreDatabaseId);
+const dbId = firebaseConfig.firestoreDatabaseId || "(default)";
+const firestore = getFirestore(firebaseApp, dbId);
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
@@ -153,10 +152,24 @@ async function startServer() {
   // API Routes
   app.get("/api/health", async (req, res) => {
     try {
+      console.log(`Health check: Using database ${dbId} in project ${admin.instanceId().app.options.projectId}`);
       const testDoc = await firestore.collection("health").doc("check").get();
-      res.json({ status: "ok", firestore: "connected", data: testDoc.exists ? testDoc.data() : "new" });
+      res.json({ 
+        status: "ok", 
+        firestore: "connected", 
+        databaseId: dbId,
+        projectId: admin.instanceId().app.options.projectId,
+        data: testDoc.exists ? testDoc.data() : "new" 
+      });
     } catch (error: any) {
-      res.status(500).json({ status: "error", firestore: error.message });
+      console.error("Health check Firestore error:", error);
+      res.status(500).json({ 
+        status: "error", 
+        firestore: error.message,
+        code: error.code,
+        databaseId: dbId,
+        projectId: admin.instanceId().app.options.projectId
+      });
     }
   });
 
@@ -207,8 +220,12 @@ async function startServer() {
    */
   const pairs = {
     "BTC/USDT": { lastPrice: 68000, volatility: 0.0005 },
+    "ETH/USDT": { lastPrice: 3500, volatility: 0.0008 },
     "NZD/USD": { lastPrice: 0.6050, volatility: 0.0002 },
-    "EUR/USD": { lastPrice: 1.0850, volatility: 0.0001 }
+    "EUR/USD": { lastPrice: 1.0850, volatility: 0.0001 },
+    "GBP/USD": { lastPrice: 1.2550, volatility: 0.0001 },
+    "PEPE/USDT": { lastPrice: 0.000008, volatility: 0.008 },
+    "DOGE/USDT": { lastPrice: 0.15, volatility: 0.004 }
   };
   
   app.get("/api/trading/ticker", (req, res) => {

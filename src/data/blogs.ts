@@ -1882,7 +1882,7 @@ The 2026 settlement represents the "end of the beginning" for crypto. While some
     category: "Crypto",
     author: "Dev Central",
     date: "May 3, 2026",
-    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1621416848469-8040a5299366?auto=format&fit=crop&w=1200&q=80",
     keywords: ["Layer 2 development", "rollup strategy 2026", "dApp scalability", "Solidity best practices"],
     content: `
 # Building with Layer 2: A Developer's Guide 2026
@@ -1918,7 +1918,7 @@ Layer 2 is where the next billion users will live. As a developer, mastering the
     category: "Crypto",
     author: "Green Finance",
     date: "May 4, 2026",
-    image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1466611653911-954ffea1321b?auto=format&fit=crop&w=1200&q=80",
     keywords: ["Bitcoin ESG 2026", "renewable crypto mining", "institutional bitcoin buy", "grid stability mining"],
     content: `
 # Institutional Adoption of Bitcoin: The ESG Turn 2026

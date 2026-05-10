@@ -1,40 +1,79 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default deny
+    
+    // 0. Global Deny
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // Global Helpers
+    // --- Helpers ---
     function isSignedIn() {
       return request.auth != null;
     }
+    
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+    
+    function isAdmin() {
+      return isEmailVerified() && request.auth.token.email == "davidnweke26@gmail.com";
+    }
 
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
     }
 
     function isValidId(id) {
       return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
     }
 
-    // Blogs: Publicly readable, admin only can write
+    // --- Validation Blueprints ---
+
+    function isValidBlogPost(data) {
+      return data.keys().hasAll(['id', 'title', 'slug', 'excerpt', 'content', 'author', 'date', 'category', 'image', 'keywords']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.title is string && data.title.size() <= 200 &&
+             data.slug is string && data.slug.size() <= 128 &&
+             data.excerpt is string && data.excerpt.size() <= 500 &&
+             data.content is string && data.content.size() <= 50000 &&
+             data.author is string && data.author.size() <= 100 &&
+             data.category is string && data.category.size() <= 50 &&
+             data.image is string && data.image.size() <= 1000 &&
+             data.keywords is list && data.keywords.size() <= 20;
+    }
+
+    function isValidConfig(data) {
+      return data.keys().hasAll(['aiEnabled']) &&
+             data.aiEnabled is bool;
+    }
+
+    // --- Collection Rules ---
+
+    // Blogs: Publicly readable, only specific Admin can write
     match /blogs/{blogId} {
       allow read: if true;
-      allow write: if false; // Only server (Admin SDK) should write here normally
+      allow create, update: if isAdmin() && isValidBlogPost(incoming()) && (
+        request.method == 'create' || 
+        (incoming().diff(existing()).affectedKeys().hasAny(['title', 'excerpt', 'content', 'image', 'keywords', 'faqs', 'updatedAt', 'aiEnabled', 'lastRun']))
+      );
+      allow delete: if isAdmin();
     }
 
-    // Config: Publicly readable, admin only can write
-    match /config/{docId} {
+    // Config: Publicly readable for aiEnabled check, only Admin can write
+    match /config/{configId} {
       allow read: if true;
-      allow write: if false; // Only server (Admin SDK) should write here normally
+      allow write: if isAdmin() && isValidConfig(incoming());
     }
 
-    // Health check collection
+    // Health: System diagnostic
     match /health/{docId} {
       allow read: if true;
-      allow write: if false;
+      allow write: if isAdmin();
     }
   }
 }

@@ -17,7 +17,8 @@ import {
   ShieldCheck,
   Rocket,
   Coins,
-  DollarSign
+  DollarSign,
+  Loader2
 } from "lucide-react";
 import { 
   XAxis, 
@@ -36,6 +37,7 @@ import Counter from "../components/Counter.tsx";
 interface PriceData {
   time: string;
   price: number;
+  fullDate?: string;
 }
 
 const SYMBOLS = ["BTC/USDT", "ETH/USDT", "NZD/USD", "EUR/USD", "GBP/USD", "PEPE/USDT", "DOGE/USDT"];
@@ -206,10 +208,10 @@ export default function MarketCenter() {
     return () => clearInterval(interval);
   }, [selectedSymbol, timeframe]);
 
-  const priceDiff = priceHistory.length > 1 
+  const priceDiff = (priceHistory && priceHistory.length > 1) 
     ? currentPrice - priceHistory[0].price 
     : 0;
-  const pricePercent = priceHistory.length > 1 
+  const pricePercent = (priceHistory && priceHistory.length > 1 && priceHistory[0].price !== 0) 
     ? (priceDiff / priceHistory[0].price) * 100 
     : 0;
 
@@ -232,7 +234,7 @@ export default function MarketCenter() {
   }, []);
 
   return (
-    <div className="h-[calc(100vh-5rem)] flex flex-col bg-[#050505] text-white font-sans selection:bg-orange-500/30 overflow-hidden">
+    <div className="flex flex-col bg-[#050505] text-white font-sans selection:bg-orange-500/30">
       <SEO 
         title="Live Market Intelligence Hub" 
         description="Real-time 2026 market data, professional forex analysis, crypto insights, and meme coin education. Master the markets with News More Expert." 
@@ -240,7 +242,7 @@ export default function MarketCenter() {
       />
       
       {/* Scrollable Dashboard Container */}
-      <div className="flex-grow overflow-y-auto overflow-x-hidden custom-scrollbar relative">
+      <div className="relative">
         {/* Scanning Line & Layout Grid - Homepage feel */}
         <div className="absolute inset-x-0 top-0 h-full pointer-events-none z-0 overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02]" />

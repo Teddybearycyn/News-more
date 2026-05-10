@@ -7,6 +7,7 @@ import { cn } from "../lib/utils.ts";
 const navLinks = [
   { name: "News", path: "/blog?category=News" },
   { name: "Politics", path: "/blog?category=Politics" },
+  { name: "Market", path: "/market" },
   { name: "Crypto", path: "/blog?category=Crypto" },
   { name: "Freelance", path: "/blog?category=Freelancing" },
   { name: "Web3", path: "/blog?category=Web3" },

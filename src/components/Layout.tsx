@@ -6,6 +6,7 @@ import ChatWidget from "./ChatWidget.tsx";
 import MasterAIController from "./MasterAIController.tsx";
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const { pathname } = useLocation();
   return (
     <div className="min-h-screen bg-[#050505] text-[#FAFAFA] font-sans selection:bg-orange-500 selection:text-white flex flex-col">
       <MasterAIController />
@@ -13,7 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <main className="flex-grow pt-20">
         {children}
       </main>
-      {!location.pathname.includes('/market') && <Footer />}
+      {!pathname.includes('/market') && <Footer />}
       <ChatWidget />
     </div>
   );

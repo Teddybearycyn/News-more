@@ -28,11 +28,6 @@ export default tseslint.config(
   },
   {
     files: ['firestore.rules'],
-    plugins: {
-      '@firebase/security-rules': firebaseRulesPlugin,
-    },
-    rules: {
-      ...firebaseRulesPlugin.configs['flat/recommended'].rules,
-    },
+    ...firebaseRulesPlugin.configs['flat/recommended'],
   }
 );

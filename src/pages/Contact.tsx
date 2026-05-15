@@ -126,6 +126,49 @@ export default function Contact() {
             </div>
           </div>
         </div>
+
+        {/* Added Section for AdSense Content Compliance */}
+        <div className="mt-40 pt-20 border-t border-white/5">
+          <div className="max-w-4xl mx-auto text-center mb-20">
+            <h2 className="text-3xl md:text-5xl font-display font-medium mb-6">Consultancy & <span className="text-orange-500">Service Framework.</span></h2>
+            <p className="text-white/40 leading-relaxed">
+              We provide high-impact technical advisory for growing digital entities. Our communication process is streamlined to ensure maximum efficiency for both our analysts and our partners.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto px-6">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white">How much does a technical audit cost?</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                Every project is unique. We provide custom quotes based on the architectural complexity and depth of analysis required. Initial consultations are always dedicated to understanding your specific 2026 growth goals.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white">Do you offer 24/7 technical support?</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                We specialize in strategic engineering and architecture. For ongoing operations support, we help you build and train internal teams or connect you with verified institutional partners in our network.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white">What is your typical turnaround time?</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                For standard technical consultations, we aim to deliver preliminary findings within 72 hours of receiving the project brief and necessary system access.
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white">Confidentiality & Non-Disclosure</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                We operate under strict professional confidentiality. Mutual NDAs are standard practice for all consultancy engagements to protect your proprietary IP and strategic initiatives.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-20 p-10 bg-orange-600/5 border border-orange-500/10 rounded-[40px] text-center max-w-3xl mx-auto">
+            <p className="text-white/70 text-sm italic">
+              "We believe that clear, professional communication is the foundation of scalable technical success. Whether you are a solo-founder or a growing enterprise, we bring the same level of integrity to every interaction."
+            </p>
+          </div>
+        </div>
       </div>
     </>
   );

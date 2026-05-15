@@ -244,8 +244,18 @@ export default function BlogList() {
               </motion.div>
             ))
           ) : (
-            <div className="col-span-full py-32 text-center">
-              <h3 className="text-2xl text-white/20">No articles found matching your criteria.</h3>
+            <div className="col-span-full py-32 text-center max-w-2xl mx-auto">
+              <h3 className="text-2xl text-white/40 mb-6">No articles found matching your criteria.</h3>
+              <p className="text-zinc-500 text-sm leading-loose">
+                While we don't have matches for this specific filter, our journal regularly covers deep-dives into <strong>Strategic Freelancing</strong>, <strong>Emerging Web3 Technologies</strong>, <strong>Geopolitical News</strong>, and <strong>Technical Engineering Support</strong>. 
+                Keep exploring our full library or try a different category to discover high-quality professional insights.
+              </p>
+              <button 
+                onClick={clearFilters}
+                className="mt-10 px-8 py-3 bg-white/5 border border-white/10 rounded-2xl text-xs font-bold uppercase tracking-widest hover:bg-orange-500 hover:border-orange-500 transition-all"
+              >
+                Reset Exploration
+              </button>
             </div>
           )}
         </div>

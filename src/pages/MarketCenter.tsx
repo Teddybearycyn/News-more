@@ -18,7 +18,11 @@ import {
   Rocket,
   Coins,
   DollarSign,
-  Loader2
+  Loader2,
+  BookOpen,
+  BarChart,
+  Globe2,
+  Shield
 } from "lucide-react";
 import { 
   XAxis, 
@@ -236,8 +240,8 @@ export default function MarketCenter() {
   return (
     <div className="flex flex-col bg-[#050505] text-white font-sans selection:bg-orange-500/30">
       <SEO 
-        title="Live Market Intelligence Hub" 
-        description="Real-time 2026 market data, professional forex analysis, crypto insights, and meme coin education. Master the markets with News More Expert." 
+        title="Live Market Intelligence Hub | News More Expert" 
+        description="Comprehensive real-time market data dashboard for 2026. Access professional forex pair analysis (EUR/USD, GBP/USD), cryptocurrency trends (BTC, ETH), and emerging digital asset education. Our hub aggregates institutional-grade signals for expert traders and financial educators." 
         canonical="/market"
       />
       
@@ -474,6 +478,83 @@ export default function MarketCenter() {
                 <div className="text-[9px] font-bold text-orange-500 mt-0.5">{stat.d}</div>
               </div>
             ))}
+          </div>
+
+          {/* Educational Content Section - Added for SEO and AdSense Compliance */}
+          <div className="mt-20 pt-20 border-t border-white/5 space-y-20 pb-20">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+              <div>
+                <div className="flex items-center gap-3 text-orange-500 text-[10px] font-bold uppercase tracking-widest mb-6">
+                  <BookOpen size={16} />
+                  Intelligence Framework
+                </div>
+                <h2 className="text-3xl font-display font-bold mb-6 text-white leading-tight">
+                  Understanding the <span className="text-orange-500">2026 Digital Economy</span> & Market Dynamics.
+                </h2>
+                <div className="space-y-4 text-zinc-400 text-sm leading-relaxed">
+                  <p>
+                    The modern financial landscape has evolved into a highly integrated ecosystem where traditional Forex markets, institutional digital assets, and high-volatility retail instruments coexist. Our Live Market Intelligence Hub is designed to bridge the gap between complex raw data and actionable insights.
+                  </p>
+                  <p>
+                    At <span className="text-white">News More Expert</span>, we prioritize data integrity and real-time synchronization. By aggregating multi-source feeds from global liquidity providers, we offer a comprehensive view of market liquidations, whale movements, and macro-economic shifts.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <div className="p-6 bg-zinc-900/40 rounded-3xl border border-white/5 hover:border-orange-500/30 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 mb-4">
+                    <Globe2 size={20} />
+                  </div>
+                  <h3 className="text-white font-bold mb-2">Global Forex pairs</h3>
+                  <p className="text-zinc-500 text-[11px] leading-relaxed">
+                    Analyzing major pairs like EUR/USD and GBP/USD requires understanding interest rate differentials and geopolitical stability.
+                  </p>
+                </div>
+                <div className="p-6 bg-zinc-900/40 rounded-3xl border border-white/5 hover:border-blue-500/30 transition-colors">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 mb-4">
+                    <BarChart size={20} />
+                  </div>
+                  <h3 className="text-white font-bold mb-2">Crypto Volatility</h3>
+                  <p className="text-zinc-500 text-[11px] leading-relaxed">
+                    Digital assets like Bitcoin and Ethereum serve as leading indicators for global risk-on sentiment and technological adoption.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-zinc-900/30 p-10 rounded-[40px] border border-white/5 relative overflow-hidden">
+              <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div className="space-y-4">
+                  <h4 className="text-white font-bold flex items-center gap-2">
+                    <Shield size={16} className="text-orange-500" />
+                    Data Sovereignty
+                  </h4>
+                  <p className="text-zinc-500 text-xs leading-loose">
+                    In an era of misinformation, our platform ensures every price tick is verified against decentralized consensus and centralized exchange depth. We provide the tools; you provide the strategy.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="text-white font-bold flex items-center gap-2">
+                    <Activity size={16} className="text-orange-500" />
+                    Market Indicators
+                  </h4>
+                  <p className="text-zinc-500 text-xs leading-loose">
+                    From Relative Strength Index (RSI) to Moving Average Convergence Divergence (MACD), our system processes technical signals in the background to highlight divergence patterns in 2026 trends.
+                  </p>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="text-white font-bold flex items-center gap-2">
+                    <Zap size={16} className="text-orange-500" />
+                    AI Optimization
+                  </h4>
+                  <p className="text-zinc-500 text-xs leading-loose">
+                    Our "Alpha Signals" utilize machine learning models to filter out market noise, focusing on high-probability setups across multiple timeframes from 1H to the Daily chart.
+                  </p>
+                </div>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-blue-500/5 opacity-50" />
+            </div>
           </div>
         </div>
       </div>
